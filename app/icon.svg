@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="i-navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a5880" />
+      <stop offset="1" stop-color="#1a2440" />
+    </linearGradient>
+    <linearGradient id="i-steel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c3cadb" />
+      <stop offset="1" stop-color="#56617f" />
+    </linearGradient>
+    <linearGradient id="i-silver" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f3f5fa" />
+      <stop offset="1" stop-color="#959eb5" />
+    </linearGradient>
+    <linearGradient id="i-white" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#a7afc3" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#05070b" />
+  <g transform="translate(0 -3)">
+    <path d="M8.2 15.6H19q2.1 0 3.1 1.8L30 34 9.4 19.6Q6.2 17.3 8.2 15.6Z" fill="url(#i-navy)" />
+    <path d="M45 15.6h10.8q2 1.7-1.2 4L34 34l7.9-16.6q1-1.8 3.1-1.8Z" fill="url(#i-silver)" />
+    <path d="M9.7 20.4 17.4 25.6 24 42 32 55Z" fill="url(#i-steel)" />
+    <path d="M17.4 25.6 30 34 24 42Z" fill="url(#i-silver)" />
+    <path d="M24 42 30 34 32 55Z" fill="url(#i-navy)" />
+    <path d="M30 34h4l4.8 11L32 55Z" fill="url(#i-white)" />
+    <path d="M34 34 46.6 25.6 38.8 45Z" fill="url(#i-navy)" />
+    <path d="M46.6 25.6 54.3 20.4 32 55 38.8 45Z" fill="url(#i-navy)" opacity=".85" />
+  </g>
+</svg>

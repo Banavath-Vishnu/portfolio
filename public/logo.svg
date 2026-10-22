@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="vb-navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34405f" />
+      <stop offset="1" stop-color="#0e1529" />
+    </linearGradient>
+    <linearGradient id="vb-steel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b9c0d2" />
+      <stop offset="1" stop-color="#4a5574" />
+    </linearGradient>
+    <linearGradient id="vb-silver" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef1f7" />
+      <stop offset="1" stop-color="#8a93ab" />
+    </linearGradient>
+    <linearGradient id="vb-white" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#9aa3b9" />
+    </linearGradient>
+  </defs>
+  <path d="M8.2 15.6H19q2.1 0 3.1 1.8L30 34 9.4 19.6Q6.2 17.3 8.2 15.6Z" fill="url(#vb-navy)" />
+  <path d="M45 15.6h10.8q2 1.7-1.2 4L34 34l7.9-16.6q1-1.8 3.1-1.8Z" fill="url(#vb-silver)" />
+  <path d="M9.7 20.4 17.4 25.6 24 42 32 55Z" fill="url(#vb-steel)" />
+  <path d="M17.4 25.6 30 34 24 42Z" fill="url(#vb-silver)" />
+  <path d="M24 42 30 34 32 55Z" fill="url(#vb-navy)" />
+  <path d="M30 34h4l4.8 11L32 55Z" fill="url(#vb-white)" />
+  <path d="M34 34 46.6 25.6 38.8 45Z" fill="url(#vb-navy)" />
+  <path d="M46.6 25.6 54.3 20.4 32 55 38.8 45Z" fill="url(#vb-navy)" opacity=".85" />
+</svg>
