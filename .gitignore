@@ -27,9 +27,44 @@ secrets.json
 *.pfx
 *.p12
 
+# Cloud service accounts, OAuth client secrets, and Firebase credentials
+service-account*.json
+*-credentials.json
+credentials.json
+client_secret*.json
+firebase-adminsdk*.json
+gcp-key*.json
+aws-credentials*
+
 # Package manager credentials
 .npmrc
 .yarnrc
+
+# ==============================================================================
+# SEARCH ENGINE & SITE VERIFICATION TOKENS
+# ==============================================================================
+# HTML / XML file verification tokens for Google Search Console, Bing, Yandex
+google*.html
+public/google*.html
+BingSiteAuth.xml
+public/BingSiteAuth.xml
+yandex_*.html
+public/yandex_*.html
+*verification*.html
+*verification*.txt
+
+# ==============================================================================
+# DATA EXPORTS, SUBSCRIBERS & MESSAGES
+# ==============================================================================
+# Prevent accidental tracking of exported newsletter subscribers or inbox messages
+subscribers.csv
+subscribers.json
+messages.csv
+messages.json
+contacts.csv
+contacts.json
+export*.csv
+export*.json
 
 # ==============================================================================
 # HOSTING & CLOUDFLARE ARTIFACTS
@@ -78,15 +113,24 @@ build/
 .turbo/
 
 # ==============================================================================
-# LOCAL DATABASES & STORAGE
+# LOCAL DATABASES, DUMPS & STORAGE
 # ==============================================================================
-# Local SQLite database dumps, journals, and WAL files
+# Local SQLite database files, dumps, journals, and WAL files
 *.sqlite
 *.sqlite3
 *.db
 *.db-journal
 *.db-shm
 *.db-wal
+*.sql
+*.dump
+
+# Database backup archives
+*.tar
+*.tar.gz
+*.zip
+*.7z
+*.rar
 
 # ==============================================================================
 # LOGS & DEBUGGING
@@ -151,6 +195,7 @@ $RECYCLE.BIN/
 # ==============================================================================
 SESSION-NOTES.txt
 scratch/
+private/
 *.tmp
 *.temp
 *.bak
