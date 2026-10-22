@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { track } from '@/lib/track';
 
 // Share buttons for a post or project: copy link, the phone's share sheet (when the browser has one),
 // LinkedIn, X, WhatsApp and email. `compact` shows icons only (for the page header).
@@ -37,7 +38,11 @@ export default function ShareBar({ title, path, compact = false, label = 'Share'
     { name: 'Email', href: `mailto:?subject=${enc(title)}&body=${enc(`${title}\n\n${url}`)}`, icon: <Stroke name="mail" />, self: true },
   ];
 
+  // GA4's recommended "share" event: which network, and what was shared.
+  const shared = (method) => track('share', { method, content_type: path.startsWith('/blog') ? 'post' : 'project', item_id: path });
+
   async function copy() {
+    shared('copy_link');
     try {
       await navigator.clipboard.writeText(url);
     } catch {
@@ -57,11 +62,11 @@ export default function ShareBar({ title, path, compact = false, label = 'Share'
       </button>
       {links.map((l) => (
         <a key={l.name} href={l.href} className="share-btn share-btn--icon" aria-label={`Share on ${l.name}`} title={`Share on ${l.name}`}
-          {...(!l.self && { target: '_blank', rel: 'noopener noreferrer' })}>{l.icon}</a>
+          onClick={() => shared(l.name.toLowerCase())} {...(!l.self && { target: '_blank', rel: 'noopener noreferrer' })}>{l.icon}</a>
       ))}
       {canShare && (
         <button type="button" className="share-btn share-btn--icon" aria-label="More sharing options" title="More…"
-          onClick={() => navigator.share({ title, url }).catch(() => {})}><Stroke name="share" /></button>
+          onClick={() => { shared('native'); navigator.share({ title, url }).catch(() => {}); }}><Stroke name="share" /></button>
       )}
       <span className="sr-only" aria-live="polite">{copied ? 'Link copied to clipboard' : ''}</span>
     </div>

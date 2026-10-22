@@ -1161,3 +1161,8 @@ html:has(dialog[open]) { overflow: hidden; }
 .related-tag { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-soft); }
 .related-name { font-weight: 700; line-height: 1.3; }
 .related-meta { margin-top: auto; font-size: 13px; color: var(--muted); }
+
+/* About: value highlight card */
+.fact--value { display: flex; flex-direction: column; gap: 2px; background: linear-gradient(150deg, color-mix(in srgb, var(--accent) 18%, var(--surface)), var(--surface) 70%); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+.fact-value--big { font-size: clamp(28px, 2.6vw, 36px); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; padding-top: 8px; }
+.fact-note { margin-top: 8px; font-size: 13.5px; line-height: 1.5; color: var(--text-2); }

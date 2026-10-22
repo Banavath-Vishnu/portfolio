@@ -7,7 +7,7 @@ import { isAdmin } from '@/lib/admin';
 import { site } from '@/data/site';
 
 // Public form actions: the contact form and the newsletter sign-up. Both save to the database
-// and show up in the admin's Inbox tab. A hidden "website" field catches bots that fill every input.
+// and show up in the admin's Inbox tab. A hidden "leave_empty" field (components/Honeypot.js) catches bots that fill every input.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const text = (formData, name, max) => String(formData.get(name) ?? '').trim().slice(0, max);
@@ -15,7 +15,7 @@ const unavailable = `This form isn’t connected yet — please email me at ${si
 
 export async function sendMessage(_prev, formData) {
   const values = { name: text(formData, 'name', 100), email: text(formData, 'email', 200), message: text(formData, 'message', 5000) };
-  if (text(formData, 'website', 200)) return { ok: true }; // bot: pretend it worked
+  if (text(formData, 'leave_empty', 200)) return { ok: true }; // bot: pretend it worked
   if (!values.name) return { error: 'Please add your name.', values };
   if (!EMAIL.test(values.email)) return { error: 'Please enter a valid email address.', values };
   if (values.message.length < 10) return { error: 'Please write a slightly longer message.', values };
@@ -35,7 +35,7 @@ export async function sendMessage(_prev, formData) {
 
 export async function subscribe(_prev, formData) {
   const email = text(formData, 'email', 200);
-  if (text(formData, 'website', 200)) return { ok: true };
+  if (text(formData, 'leave_empty', 200)) return { ok: true };
   if (!EMAIL.test(email)) return { error: 'Please enter a valid email address.', email };
   if (!(await dbAvailable())) return { error: 'Sign-ups open soon — check back shortly.', email };
   try {
@@ -49,7 +49,7 @@ export async function subscribe(_prev, formData) {
 }
 
 // ---------- Comments ----------
-// Comments go live straight away (you can hide or delete them in the admin). Spam guards: the hidden "website"
+// Comments go live straight away (you can hide or delete them in the admin). Spam guards: the hidden "leave_empty"
 // field, a length limit, and at most 5 comments per visitor per 10 minutes (by a salted hash of their IP —
 // the IP itself is never stored). When you're logged in as admin, your comments carry the "Author" badge.
 
@@ -71,7 +71,7 @@ export async function postComment(_prev, formData) {
   const targetType = formData.get('targetType') === 'project' ? 'project' : 'post';
   const targetId = Number(formData.get('targetId'));
   let parentId = Number(formData.get('parentId')) || null;
-  if (text(formData, 'website', 200)) return { ok: true }; // bot: pretend it worked
+  if (text(formData, 'leave_empty', 200)) return { ok: true }; // bot: pretend it worked
   if (!values.name) return { error: 'Please add your name.', values };
   if (values.email && !EMAIL.test(values.email)) return { error: 'That email doesn’t look right (or leave it empty).', values };
   if (values.body.length < 2) return { error: 'Please write a comment first.', values };

@@ -1,5 +1,7 @@
 'use client';
 
+import { track } from '@/lib/track';
+
 // The saved theme is applied by an inline script in layout.js before first paint;
 // this button only flips it. Both icons render and CSS shows the right one, so there is no hydration mismatch.
 export default function ThemeToggle() {
@@ -8,6 +10,7 @@ export default function ThemeToggle() {
     const next = root.dataset.theme === 'light' ? 'dark' : 'light';
     root.dataset.theme = next;
     try { localStorage.setItem('theme', next); } catch {}
+    track('theme_change', { label: next });
   }
 
   return (

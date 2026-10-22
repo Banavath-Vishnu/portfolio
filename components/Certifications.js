@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { track } from '@/lib/track';
 
 // Certifications from D1 (managed in the admin), hung like a 6-frame gallery wall:
 //   [ 1 ]  [ 2 ]  [ 4 ]  [ 6 ]
@@ -121,7 +122,7 @@ export default function Certifications({ certs }) {
     topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setTimeout(() => { setPage(p); setFading(false); }, FADE_MS);
   };
-  const open = (i) => { setViewing(i); dialogRef.current?.showModal(); };
+  const open = (i) => { setViewing(i); dialogRef.current?.showModal(); track('cert_view', { label: certs[i]?.title }); };
   // Stepping through the pop-up also turns the wall to that certification's page.
   const showInViewer = (i) => { setViewing(i); if (i != null) setPage(Math.floor(i / PER_PAGE) + 1); };
 

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { site, approach, education, review } from '@/data/site';
+import { site, about, approach, education, review } from '@/data/site';
 
 export default function About() {
   return (
@@ -7,16 +7,18 @@ export default function About() {
       <div className="about-text">
         <span className="eyebrow">ABOUT</span>
         <h2 className="h2">Curious by nature.<br /><strong>Builder by habit.</strong></h2>
-        <p>Hi, I’m Banavath Vishnu, a passionate UI/UX designer, full-stack developer, and tech entrepreneur. Currently pursuing B.Tech in Chemical Engineering at IIT Hyderabad.</p>
-        <p>I specialize in building intuitive user experiences, web applications, and scalable digital solutions. I have worked on various projects, from healthcare tech (EHR, telemedicine) to real-time applications like Chat Panda.</p>
-        <p>My expertise includes React.js, Next.js, MERN stack, and cloud technologies (AWS/GCP). I am also an athlete (Inter IIT Hammer Thrower) and enjoy solving real-world problems through tech.</p>
+        {about.map((p) => <p key={p.slice(0, 24)}>{p}</p>)}
       </div>
       <div className="about-grid">
         <div className="card lift placeholder about-photo">
           {site.portrait ? <Image src={site.portrait} alt={site.name} fill sizes="(max-width: 900px) 50vw, 25vw" style={{ objectFit: 'cover', objectPosition: 'center 28%' }} /> : <span>[Your photo]</span>}
         </div>
         <div className="card lift fact"><div className="fact-label">Based in</div><div className="fact-value">{site.location}</div></div>
-        <div className="card lift fact"><div className="fact-label">Currently learning</div><div className="fact-value">Java &amp; Spring Boot</div></div>
+        <div className="card lift fact fact--value">
+          <div className="fact-label">Trusted by</div>
+          <div className="fact-value fact-value--big">23 clients</div>
+          <div className="fact-note">2+ years delivering software end to end, from requirements to deployment</div>
+        </div>
         <figure className="card lift review">
           <div className="review-head"><span className="review-stars" aria-hidden="true">★★★★★</span><span>{review.rating}</span><span className="review-from">{review.from}</span></div>
           <blockquote>“{review.quote}”</blockquote>

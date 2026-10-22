@@ -54,11 +54,11 @@ export default function Hero() {
             <strong>secure, clear answers — powered by AI.</strong>
           </p>
           <div className="hero-ctas fu d3">
-            <a href="/#projects" className="pill pill--white cta-main">
+            <a href="/#projects" className="pill pill--white cta-main" data-track="cta_click" data-track-label="view_my_work">
               View my work
               <span className="arrow"><ArrowIcon /></span>
             </a>
-            <a href="/blog" className="pill pill--outline cta-alt">Read the blog</a>
+            <a href="/blog" className="pill pill--outline cta-alt" data-track="cta_click" data-track-label="read_the_blog">Read the blog</a>
           </div>
           <p className="hero-tagline fu d4">AI backend engineer at Bharat Smart Services.</p>
         </div>

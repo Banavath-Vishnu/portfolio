@@ -68,7 +68,7 @@ export default function Projects({ projects, categories = [] }) {
         {filters.length > 2 && (
           <div className="filters" role="group" aria-label="Filter projects">
             {filters.map((f) => (
-              <button key={f} type="button" className="filter" aria-pressed={filter === f} onClick={() => pick(f)}>{f}</button>
+              <button key={f} type="button" className="filter" data-track="project_filter" data-track-label={f} aria-pressed={filter === f} onClick={() => pick(f)}>{f}</button>
             ))}
           </div>
         )}
@@ -82,7 +82,7 @@ export default function Projects({ projects, categories = [] }) {
             <button type="button" className="nf-arrow nf-arrow--prev" onClick={() => slide(-1)} disabled={row.atStart} aria-label="Previous projects"><Chevron dir="left" /></button>
             <div className={`nf-track${fading ? ' is-fading' : ''}`} ref={track} key={filter}>
               {items.map((p, i) => (
-                <Link key={p.slug} href={`/projects/${p.slug}`} className="nf-tile" style={{ '--i': i }}>
+                <Link key={p.slug} href={`/projects/${p.slug}`} data-track="project_open" data-track-label={p.slug} className="nf-tile" style={{ '--i': i }}>
                   <span className="nf-tile-art"><Art project={p} sizes="(max-width: 560px) 80vw, (max-width: 900px) 48vw, 33vw" /></span>
                   <span className="nf-badge nf-tile-badge" aria-hidden="true"><LogoMark /></span>
                   <span className="nf-tile-info">

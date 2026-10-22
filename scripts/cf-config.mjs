@@ -27,6 +27,8 @@ const config = {
   // html_handling none: serve files like the Google verification .html exactly at their URL (no redirect).
   assets: { directory: '.open-next/assets', binding: 'ASSETS', html_handling: 'none' },
   observability: { enabled: true },
+  // Gives worker.js a unique ID per deployment (used in the edge cache key).
+  version_metadata: { binding: 'CF_VERSION_METADATA' },
   d1_databases: [{ binding: 'DB', database_name: d1Name, database_id: d1Id }],
   // Non-secret runtime settings. CLOUDINARY_API_SECRET is a secret: .dev.vars locally, `npm run cf:secrets` for production.
   vars: Object.fromEntries(['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_FOLDER', 'SITE_TIMEZONE', 'SITE_URL', 'GOOGLE_SITE_VERIFICATION', 'BING_SITE_VERIFICATION'].map((k) => [k, env(k)]).filter(([, v]) => v)),

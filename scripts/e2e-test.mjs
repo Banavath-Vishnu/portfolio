@@ -126,7 +126,7 @@ postHtml = await html(POST);
 check('anyone can reply (email optional) and the reply is nested', /class="cm-replies"[\s\S]*Replying without an email\./.test(postHtml));
 r = await submit(POST, isComment, { name: 'Bad Email', email: 'not-an-email', body: 'Should be rejected.' });
 check('an invalid email is rejected', !(await html(POST)).includes('Should be rejected.'));
-r = await submit(POST, isComment, { name: 'Bot', email: '', body: 'Buy cheap stuff', website: 'http://spam.example' });
+r = await submit(POST, isComment, { name: 'Bot', email: '', body: 'Buy cheap stuff', leave_empty: 'http://spam.example' });
 check('the honeypot drops bot comments', !(await html(POST)).includes('Buy cheap stuff'));
 cookie = adminCookie;
 r = await submit(POST, isComment, { body: 'Thanks for reading! (author reply)', parentId: commentId });
@@ -164,9 +164,9 @@ check('unpublish', r.status === 303, r.location);
 check('unpublished post is gone from /blog', !(await html(`${B}/blog`)).includes('Hello from Cloudflare D1'));
 
 // 7. Contact form + newsletter → Inbox
-r = await submit(`${B}/`, (f) => f.includes('name="message"') || f.includes('id="c-msg"'), { name: 'E2E Tester', email: 'e2e@example.com', message: 'Hello from the end-to-end test!', website: '' });
+r = await submit(`${B}/`, (f) => f.includes('name="message"') || f.includes('id="c-msg"'), { name: 'E2E Tester', email: 'e2e@example.com', message: 'Hello from the end-to-end test!', leave_empty: '' });
 check('contact form saves a message', r.body.includes('Message sent'), r.body.match(/role="alert">([^<]+)/)?.[1]);
-r = await submit(`${B}/blog`, (f) => f.includes('id="nl-email"'), { email: 'reader@example.com', website: '' });
+r = await submit(`${B}/blog`, (f) => f.includes('id="nl-email"'), { email: 'reader@example.com', leave_empty: '' });
 check('newsletter saves a subscriber', r.body.includes('on the list'), r.body.match(/role="alert">([^<]+)/)?.[1]);
 const inbox = await html(`${A}?tab=inbox`);
 check('Inbox lists the message and subscriber', inbox.includes('Hello from the end-to-end test!') && inbox.includes('reader@example.com'));

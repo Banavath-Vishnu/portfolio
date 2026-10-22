@@ -1,6 +1,8 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
+import Honeypot from './Honeypot';
+import { track } from '@/lib/track';
 import { useFormStatus } from 'react-dom';
 import { subscribe } from '@/app/actions';
 
@@ -12,6 +14,7 @@ function SubscribeButton() {
 export default function Newsletter() {
   const [state, action] = useActionState(subscribe, null);
   const [email, setEmail] = useState('');
+  useEffect(() => { if (state?.ok) track('sign_up', { method: 'newsletter' }); }, [state]);
 
   return (
     <div className="newsletter">
@@ -28,7 +31,7 @@ export default function Newsletter() {
             <input id="nl-email" name="email" type="email" required maxLength={200} autoComplete="email" placeholder="you@example.com" className="input"
               value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
-          <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hp-field" aria-hidden="true" />
+          <Honeypot />
           <SubscribeButton />
           {state?.error && <p className="form-error" role="alert">{state.error}</p>}
         </form>

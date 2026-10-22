@@ -24,6 +24,7 @@ To test the production build in Cloudflare's real runtime (still local): `npm ru
 | `SITE_URL` | Your live address, e.g. `https://vishnu.dev` (empty = the address the site is served from). Used for SEO |
 | `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION` | Search Console / Bing Webmaster ownership codes (optional) |
 | `NEXT_PUBLIC_GA_ID` | Google Analytics 4 id (optional) |
+| `NEXT_PUBLIC_CLARITY_ID` | Microsoft Clarity project ID — heatmaps, scroll maps, session replays (optional) |
 | `ADMIN_PASSWORD`, `SESSION_SECRET` | Admin login (secret = 32+ random chars) |
 | `CF_ACCOUNT_ID` | Optional; only if your Cloudflare login has several accounts |
 | `CF_WORKER_NAME` | The Worker (site) name → `https://<name>.<you>.workers.dev` |
@@ -98,6 +99,10 @@ Every admin page and every save checks the login on the server.
 - **Edge page cache** (`worker.js`, the Worker entry): the home page, /blog, posts, projects, sitemap, robots and feed are cached at Cloudflare's edge for visitors (~10 ms instead of ~0.5–1 s). Every admin change, comment or moderation bumps a content version (`bumpContentVersion` in `lib/db.js`), and a scheduled post going live changes it too, so visitors always get current pages. Never cached: logged-in admin, admin/API routes, form submissions, client navigations, URLs with query strings. Response header `X-Edge-Cache: HIT|MISS` shows what happened. `npm run dev` isn't cached.
 - **Images** are WebP/JPEG (`portrait-hero.webp` 40 KB instead of an 833 KB PNG); `public/_headers` gives images and build files long browser caching.
 - **Cold starts**: `ensureSchema` checks a stored schema version (one query) and only runs setup when `SCHEMA_VERSION` changes — bump it when you change tables.
+
+## Analytics
+
+Google Analytics 4 (`NEXT_PUBLIC_GA_ID`) and Microsoft Clarity (`NEXT_PUBLIC_CLARITY_ID`) load from `components/Analytics.js` — each only when its ID is set, and never on admin pages. They're baked in at build time, so redeploy after changing them. Tracked events (sent to both): `cta_click`, `nav_click`, `resume_click`, `social_click`, `email_click`, `project_open`, `project_filter`, `post_open`, `blog_filter`, `cert_view`, `share` (method), `generate_lead` (contact form), `sign_up` (newsletter), `comment_post`, `theme_change`, and `section_view` (which homepage sections a visitor reaches). To track a new button, add `data-track="event_name"` (and optionally `data-track-label`) — or call `track()` from `lib/track.js`. In GA4, register `label`, `section`, `method` as custom dimensions (Admin → Custom definitions) to see them in reports. `/privacy` explains what's collected.
 
 ## SEO
 

@@ -20,6 +20,13 @@ export const site = {
 // Rotating words in the hero: "I build …"
 export const heroWords = ['AI.', 'APIs.', 'agents.', 'apps.', 'systems.', 'platforms.', 'products.', 'backends.', 'automation.', 'software.'];
 
+// About section text (also used in /llms.txt for AI assistants).
+export const about = [
+  'I’m Banavath Vishnu, a Full Stack Developer and Agentic AI Engineer at Bharat Smart Services and an IIT Hyderabad graduate. I build scalable software systems and AI-powered applications that solve real-world problems.',
+  'I also have 2+ years of freelancing experience, working with 23 clients and delivering end-to-end software solutions, from requirements and development to deployment.',
+  'I’m particularly interested in building AI-native products that combine strong software engineering with intelligent systems, scalable architectures and practical business applications.',
+];
+
 export const award = {
   year: '2025',
   title: ['National', 'Design', '3rd Place'],

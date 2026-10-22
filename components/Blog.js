@@ -10,7 +10,7 @@ export default function Blog({ posts }) {
           <span className="eyebrow">BLOG</span>
           <h2 className="h2">Latest <strong>writing</strong></h2>
         </div>
-        <Link href="/blog" className="pill pill--outline" style={{ minHeight: 50, padding: '0 26px', fontSize: 15 }}>All posts ↗</Link>
+        <Link href="/blog" data-track="cta_click" data-track-label="all_posts" className="pill pill--outline" style={{ minHeight: 50, padding: '0 26px', fontSize: 15 }}>All posts ↗</Link>
       </div>
 
       {posts.length > 0

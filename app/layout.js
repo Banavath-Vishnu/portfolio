@@ -1,13 +1,12 @@
 import { Manrope, Fraunces, JetBrains_Mono } from 'next/font/google';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { site } from '@/data/site';
 import { siteUrl } from '@/lib/siteUrl';
+import Analytics from '@/components/Analytics';
 import './globals.css';
 
 const sans = Manrope({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], variable: '--font-sans', display: 'swap' });
 const serif = Fraunces({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-serif', display: 'swap' });
 const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' });
-
 // Built per request so URLs use the real site address (see lib/siteUrl.js).
 export async function generateMetadata() {
   const base = await siteUrl();
@@ -48,17 +47,16 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         {/* Apply the saved theme before first paint so light mode never flashes dark. */}
         <script dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem('theme')==='light')document.documentElement.dataset.theme='light'}catch(e){}" }} />
       </head>
       <body>
         {children}
+        <Analytics />
       </body>
-      {gaId && <GoogleAnalytics gaId={gaId} />}
     </html>
   );
 }

@@ -1,9 +1,11 @@
 'use client';
 
 import { useActionState, useEffect, useRef, useState } from 'react';
+import Honeypot from './Honeypot';
 import { useRouter } from 'next/navigation';
 import { postComment } from '@/app/actions';
 import { LogoMark } from './Icons';
+import { track } from '@/lib/track';
 
 // Comments under a post or project. Anyone can comment (name required, email optional and never shown)
 // and reply; replies stay one level deep. Comments appear right away. Your name/email are remembered in
@@ -23,6 +25,7 @@ function CommentForm({ targetType, targetId, parentId, author, authorName, onDon
   useEffect(() => { if (autoFocus) box.current?.focus(); }, [autoFocus]);
   useEffect(() => {
     if (!state?.ok) return;
+    track('comment_post', { content_type: targetType, reply: Boolean(parentId) });
     setBody('');
     if (!author) { try { localStorage.setItem(REMEMBER, JSON.stringify(who)); } catch { /* private mode */ } }
     router.refresh(); // pull in the new comment
@@ -34,7 +37,7 @@ function CommentForm({ targetType, targetId, parentId, author, authorName, onDon
       <input type="hidden" name="targetType" value={targetType} />
       <input type="hidden" name="targetId" value={targetId} />
       {parentId && <input type="hidden" name="parentId" value={parentId} />}
-      <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hp-field" aria-hidden="true" />
+      <Honeypot />
       {author ? (
         <p className="cm-as">Commenting as <strong>{authorName}</strong> <span className="cm-badge">Author</span></p>
       ) : (

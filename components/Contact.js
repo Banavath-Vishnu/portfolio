@@ -1,6 +1,8 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
+import Honeypot from './Honeypot';
+import { track } from '@/lib/track';
 import { useFormStatus } from 'react-dom';
 import { site } from '@/data/site';
 import { sendMessage } from '@/app/actions';
@@ -21,6 +23,7 @@ export default function Contact() {
   // Controlled so the text survives an error (React resets uncontrolled fields after an action).
   const [f, setF] = useState({ name: '', email: '', message: '' });
   const bind = (name) => ({ name, value: f[name], onChange: (e) => setF((s) => ({ ...s, [name]: e.target.value })) });
+  useEffect(() => { if (state?.ok) track('generate_lead', { form: 'contact' }); }, [state]);
 
   return (
     <section id="contact" className="contact">
@@ -28,7 +31,7 @@ export default function Contact() {
         <span className="eyebrow">CONTACT</span>
         <h2 className="contact-title">let’s<br /><strong>talk.</strong></h2>
         <p>Building something with AI, or need a backend that holds up to a security audit? I’d love to hear about it.</p>
-        <a href={`mailto:${site.email}`} className="contact-email">{site.email} ↗</a>
+        <a href={`mailto:${site.email}`} className="contact-email" data-track="email_click" data-track-label="contact">{site.email} ↗</a>
       </div>
       <div className="contact-form">
         {state?.ok ? (
@@ -39,7 +42,7 @@ export default function Contact() {
             <div className="field"><label htmlFor="c-email">Email</label><input id="c-email" type="email" required maxLength={200} autoComplete="email" className="input" {...bind('email')} /></div>
             <div className="field"><label htmlFor="c-msg">Message</label><textarea id="c-msg" rows={5} required minLength={10} maxLength={5000} className="input" {...bind('message')} /></div>
             {/* Hidden from people; bots that fill every field get ignored. */}
-            <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hp-field" aria-hidden="true" />
+            <Honeypot />
             {state?.error && <p className="form-error" role="alert">{state.error}</p>}
             <SendButton />
           </form>

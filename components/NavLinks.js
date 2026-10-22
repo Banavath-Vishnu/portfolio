@@ -43,7 +43,7 @@ export default function NavLinks() {
   return (
     <div className="nav-links">
       {links.map((l) => (
-        <a key={l.href} href={l.href} className={active === l.id ? 'active' : undefined} aria-current={active === l.id ? 'true' : undefined}>
+        <a key={l.href} href={l.href} data-track="nav_click" data-track-label={l.label} className={active === l.id ? 'active' : undefined} aria-current={active === l.id ? 'true' : undefined}>
           {l.label}
         </a>
       ))}

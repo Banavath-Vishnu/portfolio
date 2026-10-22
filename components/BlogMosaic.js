@@ -92,7 +92,7 @@ export default function BlogMosaic({ posts, topics = [] }) {
     <div className="mosaic-wrap fu d2" ref={topRef}>
       <div className="mosaic-tabs" role="group" aria-label="Filter posts by topic" ref={tabsRef}>
         {tabs.map((t) => (
-          <button key={t} type="button" className="mosaic-tab" aria-pressed={tag === t} onClick={() => t !== tag && change(() => { setTag(t); setPage(1); })}>
+          <button key={t} type="button" className="mosaic-tab" data-track="blog_filter" data-track-label={t} aria-pressed={tag === t} onClick={() => t !== tag && change(() => { setTag(t); setPage(1); })}>
             {t}
           </button>
         ))}
@@ -101,7 +101,7 @@ export default function BlogMosaic({ posts, topics = [] }) {
 
       <div className={`mosaic${fading ? ' is-fading' : ''}`} ref={gridRef} key={view}>
         {shown.map((p, i) => (
-          <Link key={p.slug} href={`/blog/${p.slug}`} className={`tile tile--${sizes[i]}`} style={{ '--i': i }}>
+          <Link key={p.slug} href={`/blog/${p.slug}`} data-track="post_open" data-track-label={p.slug} className={`tile tile--${sizes[i]}`} style={{ '--i': i }}>
             <Image src={p.cover} alt="" fill sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" style={{ objectFit: 'cover' }} />
             <span className="tile-shade" aria-hidden="true" />
             <span className="tile-text">
