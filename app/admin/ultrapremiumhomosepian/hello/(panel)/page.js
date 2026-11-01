@@ -9,8 +9,10 @@ import { ADMIN_PATH } from '@/lib/adminPath';
 const NOTICES = {
   'saved=post': 'Post saved.',
   'deleted=post': 'Post deleted.',
+  'discarded=post': 'Pending changes discarded.',
   'saved=project': 'Project saved.',
   'deleted=project': 'Project deleted.',
+  'discarded=project': 'Pending changes discarded.',
   'published=post': 'Post published — it’s live now.',
   'scheduled=post': 'Post scheduled — it goes live automatically at the time you set.',
   'published=project': 'Project published — it’s live now.',

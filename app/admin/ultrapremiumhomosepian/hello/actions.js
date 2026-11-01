@@ -39,12 +39,13 @@ export async function logout() {
 
 // ---------- Helpers ----------
 
-function text(formData, name, max = 20000) {
-  return String(formData.get(name) ?? '').trim().slice(0, max);
+function text(formData, name, max) {
+  const val = String(formData.get(name) ?? '').trim();
+  return max ? val.slice(0, max) : val;
 }
 
 function slugify(s) {
-  return s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  return s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
 function safeHref(href) {
@@ -93,8 +94,8 @@ export async function savePost(_prev, formData) {
   try {
     await needDb();
     await ensureSchema();
-    const title = text(formData, 'title', 200);
-    const slug = slugify(text(formData, 'slug', 120) || title);
+    const title = text(formData, 'title');
+    const slug = slugify(text(formData, 'slug') || title);
     const tagIn = text(formData, 'tag');
     if (!title) return { error: 'Title is required.' };
     if (!slug) return { error: 'Slug is required.' };
@@ -106,18 +107,18 @@ export async function savePost(_prev, formData) {
     if (id && !row) return { error: 'Post not found.' };
 
     // Publish date & time (sent as ISO from the editor). Empty = when you approve; a future time schedules the post.
-    const publishIn = text(formData, 'publishAt', 40);
+    const publishIn = text(formData, 'publishAt');
     const publishAt = publishIn ? new Date(publishIn) : null;
     if (publishAt && Number.isNaN(publishAt.getTime())) return { error: 'That publish date isn’t valid.' };
 
     const draft = {
       slug,
       title,
-      excerpt: text(formData, 'excerpt', 500),
-      content: text(formData, 'content', 200000),
+      excerpt: text(formData, 'excerpt'),
+      content: text(formData, 'content'),
       content_format: formData.get('contentFormat') === 'html' ? 'html' : 'markdown',
       tag: await pickCategory('post', tagIn),
-      read_time: text(formData, 'readTime', 40) || null,
+      read_time: text(formData, 'readTime') || null,
       publish_at: publishAt ? publishAt.toISOString() : null,
       cover_url: await nextImage({ formData, field: 'cover', removeField: 'removeCover', folder: 'blog', live: row?.cover_url ?? null, draft: row?.draft?.cover_url }),
     };
@@ -180,11 +181,21 @@ export async function discardPostDraft(formData) {
   await requireAdmin();
   await needDb();
   const id = Number(formData.get('id'));
-  const [row] = await sql`SELECT cover_url, content, draft FROM posts WHERE id = ${id}`;
+  const returnTo = formData.get('returnTo');
+  const [row] = await sql`SELECT cover_url, content, draft, published, published_at FROM posts WHERE id = ${id}`;
   if (row?.draft) {
     if (row.draft.cover_url !== row.cover_url) await removeImage(row.draft.cover_url);
     await removeUnusedInline(row.draft.content, row.content);
-    await sql`UPDATE posts SET draft = NULL, updated_at = ${new Date()} WHERE id = ${id}`;
+    if (!row.published && !row.published_at) {
+      await sql`DELETE FROM posts WHERE id = ${id}`;
+      await sql`DELETE FROM comments WHERE target_type = 'post' AND target_id = ${id}`;
+      redirect(`${ADMIN_PATH}?tab=posts&discarded=post`);
+    } else {
+      await sql`UPDATE posts SET draft = NULL, updated_at = ${new Date()} WHERE id = ${id}`;
+    }
+  }
+  if (returnTo === 'dashboard') {
+    redirect(`${ADMIN_PATH}?tab=posts&discarded=post`);
   }
   redirect(`${ADMIN_PATH}/posts/${id}?discarded=1`);
 }
@@ -222,10 +233,10 @@ export async function saveProject(_prev, formData) {
   try {
     await needDb();
     await ensureSchema();
-    const name = text(formData, 'name', 120);
-    const slug = slugify(text(formData, 'slug', 120) || name);
+    const name = text(formData, 'name');
+    const slug = slugify(text(formData, 'slug') || name);
     const key = text(formData, 'filterKey');
-    const href = safeHref(text(formData, 'href', 500));
+    const href = safeHref(text(formData, 'href'));
     if (!name) return { error: 'Name is required.' };
     if (!slug) return { error: 'Slug is required.' };
     if (href === null) return { error: 'Link must start with https://, http://, / or #.' };
@@ -239,14 +250,14 @@ export async function saveProject(_prev, formData) {
     const draft = {
       name,
       slug,
-      content: text(formData, 'content', 200000),
+      content: text(formData, 'content'),
       content_format: formData.get('contentFormat') === 'html' ? 'html' : 'markdown',
-      category: text(formData, 'category', 60).toUpperCase(),
+      category: text(formData, 'category').toUpperCase(),
       filter_key: await pickCategory('project', key),
-      tags: text(formData, 'tags', 400).split(',').map((t) => t.trim()).filter(Boolean).slice(0, 12),
-      description: text(formData, 'description', 600),
+      tags: text(formData, 'tags').split(',').map((t) => t.trim()).filter(Boolean),
+      description: text(formData, 'description'),
       href,
-      link_label: text(formData, 'linkLabel', 40) || 'Read more ↗',
+      link_label: text(formData, 'linkLabel') || 'Read more ↗',
       sort_order: Number.parseInt(text(formData, 'sortOrder'), 10) || 0,
       image_url: await nextImage({ formData, field: 'image', removeField: 'removeImage', folder: 'projects', live: row?.image_url ?? null, draft: row?.draft?.image_url }),
     };
@@ -293,11 +304,21 @@ export async function discardProjectDraft(formData) {
   await requireAdmin();
   await needDb();
   const id = Number(formData.get('id'));
-  const [row] = await sql`SELECT image_url, content, draft FROM projects WHERE id = ${id}`;
+  const returnTo = formData.get('returnTo');
+  const [row] = await sql`SELECT image_url, content, draft, published FROM projects WHERE id = ${id}`;
   if (row?.draft) {
     if (row.draft.image_url !== row.image_url) await removeImage(row.draft.image_url);
     await removeUnusedInline(row.draft.content, row.content);
-    await sql`UPDATE projects SET draft = NULL WHERE id = ${id}`;
+    if (!row.published) {
+      await sql`DELETE FROM projects WHERE id = ${id}`;
+      await sql`DELETE FROM comments WHERE target_type = 'project' AND target_id = ${id}`;
+      redirect(`${ADMIN_PATH}?tab=projects&discarded=project`);
+    } else {
+      await sql`UPDATE projects SET draft = NULL WHERE id = ${id}`;
+    }
+  }
+  if (returnTo === 'dashboard') {
+    redirect(`${ADMIN_PATH}?tab=projects&discarded=project`);
   }
   redirect(`${ADMIN_PATH}/projects/${id}?discarded=1`);
 }

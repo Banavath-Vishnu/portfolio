@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { formatViews } from '@/data/site';
-import { deletePost, deleteProject, deleteMessage, deleteSubscriber, deleteComment, setCommentHidden } from '@/app/admin/ultrapremiumhomosepian/hello/actions';
+import { deletePost, deleteProject, deleteMessage, deleteSubscriber, deleteComment, setCommentHidden, discardPostDraft, discardProjectDraft } from '@/app/admin/ultrapremiumhomosepian/hello/actions';
 import SubmitButton from './SubmitButton';
 import DeleteButton from './DeleteButton';
+import DiscardButton from './DiscardButton';
 import PageHeader from './PageHeader';
 import { StatusBadge } from './EditorFooter';
 import CopyButton from './CopyButton';
@@ -92,6 +93,7 @@ export default function DashboardView({ posts, projects, inbox = { messages: [],
                       <Link href={`${ADMIN_PATH}/posts/${p.id}`} className="admin-link">Edit</Link>
                       <Link href={`${ADMIN_PATH}/preview/posts/${p.id}`} className="admin-link">Preview</Link>
                       {p.live && !p.scheduled && <a href={`/blog/${p.slug}`} target="_blank" rel="noopener noreferrer" className="admin-link">View ↗</a>}
+                      {p.hasDraft && <DiscardButton action={discardPostDraft} id={p.id} label={p.title} live={p.live} />}
                       <DeleteButton action={deletePost} id={p.id} label={p.title} />
                     </td>
                   </tr>
@@ -128,6 +130,7 @@ export default function DashboardView({ posts, projects, inbox = { messages: [],
                       <Link href={`${ADMIN_PATH}/projects/${p.id}`} className="admin-link">Edit</Link>
                       <Link href={`${ADMIN_PATH}/preview/projects/${p.id}`} className="admin-link">Preview</Link>
                       {p.live && <a href={`/projects/${p.slug}`} target="_blank" rel="noopener noreferrer" className="admin-link">View ↗</a>}
+                      {p.hasDraft && <DiscardButton action={discardProjectDraft} id={p.id} label={p.name} live={p.live} />}
                       <DeleteButton action={deleteProject} id={p.id} label={p.name} />
                     </td>
                   </tr>

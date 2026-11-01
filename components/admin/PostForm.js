@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useEffect, useRef, useState } from 'react';
-import { savePost } from '@/app/admin/ultrapremiumhomosepian/hello/actions';
+import { savePost, discardPostDraft } from '@/app/admin/ultrapremiumhomosepian/hello/actions';
 import Link from 'next/link';
 import { ADMIN_PATH } from '@/lib/adminPath';
 import ContentEditor from './ContentEditor';
@@ -16,7 +16,7 @@ function toLocalInput(iso) {
 }
 
 function slugify(s) {
-  return s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  return s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
 const STATUS_HELP = {
@@ -65,7 +65,7 @@ export default function PostForm({ post, heading, notice, alert, topics = [] }) 
   return (
     <form ref={form} action={action} onSubmit={onSubmit} className="adm-editor adm-editor--tabs">
       {post && <input type="hidden" name="id" value={post.id} />}
-      <EditorBar {...heading} item={post} error={state?.error || (missing && !title.trim() ? 'Add a title (Details tab) before saving.' : null)} />
+      <EditorBar {...heading} item={post} discardAction={discardPostDraft} error={state?.error || (missing && !title.trim() ? 'Add a title (Details tab) before saving.' : null)} />
       {notice && <p className="admin-notice" role="status">{notice}</p>}
       {alert && <p className="admin-alert admin-alert--error" role="alert">{alert}</p>}
       <EditorTabs tab={tab} onTab={setTab} words={wordCount(content)} missing={missing && !title.trim()} />
@@ -75,12 +75,12 @@ export default function PostForm({ post, heading, notice, alert, topics = [] }) 
           <section className="adm-card adm-card--pad">
             <div className="field">
               <label htmlFor="title">Title</label>
-              <input ref={titleRef} id="title" name="title" maxLength={200} className="input adm-input-title" placeholder="A clear, specific title" value={title}
+              <input ref={titleRef} id="title" name="title" className="input adm-input-title" placeholder="A clear, specific title" value={title}
                 onChange={(e) => { setTitle(e.target.value); if (!slugEdited) setSlug(slugify(e.target.value)); }} />
             </div>
             <div className="field">
-              <label htmlFor="excerpt">Summary <span className="admin-hint">shown on cards and in search results · {excerpt.length}/500</span></label>
-              <textarea id="excerpt" name="excerpt" rows={3} maxLength={500} className="input" value={excerpt} onChange={(e) => setExcerpt(e.target.value)} />
+              <label htmlFor="excerpt">Summary <span className="admin-hint">shown on cards and in search results{excerpt.length > 0 ? ` · ${excerpt.length} characters` : ''}</span></label>
+              <textarea id="excerpt" name="excerpt" rows={3} className="input" value={excerpt} onChange={(e) => setExcerpt(e.target.value)} />
             </div>
             <div className="adm-field-row">
               <div className="field">

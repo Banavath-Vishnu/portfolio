@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { ADMIN_PATH } from '@/lib/adminPath';
 import SubmitButton from './SubmitButton';
 
 export function statusOf(item) {
@@ -18,7 +19,7 @@ export function StatusBadge({ item }) {
 // Sticky header for the editors (title on the left, save actions on the right, like YouTube Studio).
 // Lives inside the <form> so the submit buttons can show their pending state.
 // Saving never publishes: "Save draft" keeps editing, "Save & preview" opens the page preview to approve.
-export default function EditorBar({ eyebrow, title, item, previewHref, error }) {
+export default function EditorBar({ eyebrow, title, item, previewHref, error, discardAction }) {
   return (
     <div className="adm-editbar">
       <div className="adm-page-title">
@@ -26,6 +27,32 @@ export default function EditorBar({ eyebrow, title, item, previewHref, error }) 
         <div className="adm-title-row"><h1 className="admin-title">{title}</h1><StatusBadge item={item} /></div>
       </div>
       <div className="adm-editbar-actions">
+        {item?.hasDraft && discardAction ? (
+          <button
+            type="submit"
+            formAction={discardAction}
+            formNoValidate
+            className="adm-btn adm-btn--ghost adm-btn--danger"
+            onClick={(e) => {
+              const msg = item.live
+                ? 'Discard saved draft changes and revert to the live version?'
+                : 'Discard this draft?';
+              if (!confirm(msg)) e.preventDefault();
+            }}
+          >
+            Discard draft
+          </button>
+        ) : (
+          <Link
+            href={ADMIN_PATH}
+            className="adm-btn adm-btn--ghost"
+            onClick={(e) => {
+              if (!confirm('Discard changes and leave this page?')) e.preventDefault();
+            }}
+          >
+            Discard
+          </Link>
+        )}
         {previewHref && <Link href={previewHref} className="adm-btn adm-btn--ghost">Preview page</Link>}
         <SubmitButton name="intent" value="draft" pendingLabel="Saving…" className="adm-btn">Save draft</SubmitButton>
         <SubmitButton name="intent" value="preview" pendingLabel="Opening preview…" className="adm-btn adm-btn--primary">Save &amp; preview →</SubmitButton>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useRef, useState } from 'react';
-import { saveProject } from '@/app/admin/ultrapremiumhomosepian/hello/actions';
+import { saveProject, discardProjectDraft } from '@/app/admin/ultrapremiumhomosepian/hello/actions';
 import Link from 'next/link';
 import { slugify } from '@/data/site';
 import { ADMIN_PATH } from '@/lib/adminPath';
@@ -55,7 +55,7 @@ export default function ProjectForm({ project, heading, notice, alert, filters =
   return (
     <form ref={form} action={action} onSubmit={onSubmit} className="adm-editor adm-editor--tabs">
       {project && <input type="hidden" name="id" value={project.id} />}
-      <EditorBar {...heading} item={project} error={state?.error || (missing && !f.name.trim() ? 'Add a project name (Details tab) before saving.' : null)} />
+      <EditorBar {...heading} item={project} discardAction={discardProjectDraft} error={state?.error || (missing && !f.name.trim() ? 'Add a project name (Details tab) before saving.' : null)} />
       {notice && <p className="admin-notice" role="status">{notice}</p>}
       {alert && <p className="admin-alert admin-alert--error" role="alert">{alert}</p>}
       <EditorTabs tab={tab} onTab={setTab} words={wordCount(f.content)} missing={missing && !f.name.trim()} />
@@ -65,12 +65,12 @@ export default function ProjectForm({ project, heading, notice, alert, filters =
           <section className="adm-card adm-card--pad">
             <div className="field">
               <label htmlFor="name">Project name</label>
-              <input ref={nameRef} id="name" name="name" maxLength={120} className="input adm-input-title" placeholder="e.g. NerveNet" value={f.name}
+              <input ref={nameRef} id="name" name="name" className="input adm-input-title" placeholder="e.g. NerveNet" value={f.name}
                 onChange={(e) => { const name = e.target.value; setF((s) => ({ ...s, name, slug: slugEdited ? s.slug : slugify(name) })); }} />
             </div>
             <div className="field">
-              <label htmlFor="description">Short description <span className="admin-hint">shown on the project card · {f.description.length}/600</span></label>
-              <textarea id="description" rows={3} maxLength={600} className="input" {...bind('description')} />
+              <label htmlFor="description">Short description <span className="admin-hint">shown on the project card{f.description.length > 0 ? ` · ${f.description.length} characters` : ''}</span></label>
+              <textarea id="description" rows={3} className="input" {...bind('description')} />
             </div>
             <div className="field">
               <label htmlFor="tags">Tech tags <span className="admin-hint">comma-separated</span></label>
@@ -84,7 +84,7 @@ export default function ProjectForm({ project, heading, notice, alert, filters =
               </div>
               <div className="field">
                 <label htmlFor="category">Category label</label>
-                <input id="category" maxLength={60} className="input" placeholder="AI PLATFORM" {...bind('category')} />
+                <input id="category" className="input" placeholder="AI PLATFORM" {...bind('category')} />
               </div>
             </div>
             <div className="adm-field-row">
@@ -110,7 +110,7 @@ export default function ProjectForm({ project, heading, notice, alert, filters =
               </div>
               <div className="field">
                 <label htmlFor="linkLabel">Button text</label>
-                <input id="linkLabel" maxLength={40} className="input" {...bind('linkLabel')} />
+                <input id="linkLabel" className="input" {...bind('linkLabel')} />
               </div>
             </div>
           </section>

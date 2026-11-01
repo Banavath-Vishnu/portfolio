@@ -24,7 +24,7 @@ export default function ApprovalBar({ item, editHref, liveHref, publish, discard
       <div className="approval-actions">
         <Link href={editHref} className="adm-btn">← Edit</Link>
         {live && !hasDraft && !scheduled && <a href={liveHref} target="_blank" rel="noopener noreferrer" className="adm-btn">View live ↗</a>}
-        {live && hasDraft && (
+        {hasDraft && (
           <form action={discard}><input type="hidden" name="id" value={id} />
             <SubmitButton pendingLabel="Discarding…" className="adm-btn">Discard changes</SubmitButton>
           </form>
